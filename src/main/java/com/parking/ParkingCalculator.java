@@ -7,21 +7,32 @@ public class ParkingCalculator {
         
         double baseRate = 0.0;
         double hourlyRate = 0.0;
+        double dailyCap = 0.0;
         
         if (vehicleType.equalsIgnoreCase("Car")) {
             baseRate = 5.0;
             hourlyRate = 2.0;
+            dailyCap = 25.0;
         } else if (vehicleType.equalsIgnoreCase("Motorcycle")) {
             baseRate = 3.0;
             hourlyRate = 1.0;
+            dailyCap = 15.0;
         } else if (vehicleType.equalsIgnoreCase("Bus")) {
             baseRate = 10.0;
             hourlyRate = 5.0;
+            dailyCap = 50.0;
         } else {
             throw new IllegalArgumentException("Unknown vehicle type");
         }
         
-        if (hoursParked <= 1) return baseRate;
-        return baseRate + ((hoursParked - 1) * hourlyRate);
+        double totalFee;
+        if (hoursParked <= 1) {
+            totalFee = baseRate;
+        } else {
+            totalFee = baseRate + ((hoursParked - 1) * hourlyRate);
+        }
+        
+        // Apply the daily cap
+        return Math.min(totalFee, dailyCap);
     }
 }

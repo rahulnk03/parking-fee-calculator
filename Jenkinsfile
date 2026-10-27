@@ -2,10 +2,15 @@ pipeline {
     agent any
     
     tools {
-        maven 'Maven3' // We will configure this name in Jenkins later
+        maven 'Maven3'
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
         stage('Build') {
             steps {
                 sh 'mvn clean compile'
@@ -19,6 +24,12 @@ pipeline {
         stage('Package') {
             steps {
                 sh 'mvn package -DskipTests'
+            }
+            post {
+                success {
+                    // This creates the "archived JAR" requirement
+                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                }
             }
         }
     }
